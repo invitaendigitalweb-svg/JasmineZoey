@@ -28,6 +28,7 @@
             height: 100%;
             background-color: #e6f0f7;
             overflow-x: hidden;
+            position: relative;
             font-family: sans-serif;
         }
 
@@ -35,6 +36,8 @@
             position: relative;
             width: 100vw;
             height: 100vh;
+            max-width: 100%;
+            overflow-x: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -46,6 +49,8 @@
             left: 0;
             width: 100%;
             height: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
             transition: opacity 0.4s ease-in-out;
             display: flex;
             justify-content: center;
@@ -73,6 +78,7 @@
         /* Sección superior (Portada y Frase pegadas con fondo azul cielo) */
         .seccion-portada {
             width: 100%;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -87,6 +93,7 @@
         /* Sección del fondo personalizado (para padres, padrinos, chambelanes y damas) */
         .seccion-fotos {
             width: 100%;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -100,6 +107,7 @@
         /* Sección final para la fecha (con fondo azul cielo, sin espacio superior y con el contador integrado) */
         .seccion-fecha {
             width: 100%;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -110,6 +118,7 @@
         /* Sección para la vestimenta, regalos, confirmacion y fondoconfirmacion completamente pegadas juntas y al carrusel */
         .seccion-vestimenta {
             width: 100%;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -125,6 +134,7 @@
         .seccion-confirmacion {
             position: relative;
             width: 100%;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -139,6 +149,7 @@
         /* Nueva sección para foto final.jpg y cierre.jpg completamente pegadas al final */
         .seccion-cierre {
             width: 100%;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -164,6 +175,7 @@
         /* Sección única para juntar Ceremonia, Recepción y Galería (carrusel) completamente pegadas */
         .seccion-ubicaciones {
             width: 100%;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -269,6 +281,7 @@
         /* --- ESTILOS DEL CONTADOR Y TEXTO SUPERIOR --- */
         .countdown-section {
             width: 100%;
+            max-width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -520,6 +533,7 @@
         .image-wrapper img {
             height: 100%;
             width: auto;
+            max-width: 100%;
             object-fit: contain;
             display: block;
         }
