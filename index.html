@@ -75,137 +75,79 @@
             pointer-events: auto;
         }
 
-        /* Sección superior (Portada y Frase pegadas con fondo azul cielo) */
-        .seccion-portada {
-            width: 100%;
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0;
-            background-color: #e6f0f7;
-        }
-
-        .seccion-portada .foto-invitacion {
-            margin-bottom: 0;
-        }
-
-        /* Sección del fondo personalizado (para padres, padrinos, chambelanes y damas) */
-        .seccion-fotos {
-            width: 100%;
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 15px;
-            background-image: url('fondo.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        /* Sección final para la fecha (con fondo azul cielo, sin espacio superior y con el contador integrado) */
-        .seccion-fecha {
-            width: 100%;
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 15px 20px 15px;
-            background-color: #e6f0f7;
-        }
-
-        /* Sección para la vestimenta, regalos, confirmacion y fondoconfirmacion completamente pegadas juntas y al carrusel */
-        .seccion-vestimenta {
-            width: 100%;
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 15px 0 15px;
-            background-color: #e6f0f7;
-        }
-
-        .seccion-vestimenta .foto-invitacion {
-            margin-bottom: 0;
-        }
-
-        /* Sección para la foto fondoconfirmacion.jpg con el formulario incrustado encima (sin espacio superior) */
-        .seccion-confirmacion {
-            position: relative;
-            width: 100%;
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 15px 0 15px;
-            background-color: #e6f0f7;
-        }
-
-        .seccion-confirmacion .foto-invitacion {
-            margin-bottom: 0;
-        }
-
-        /* Nueva sección para foto final.jpg y cierre.jpg completamente pegadas al final */
+        /* Secciones a ancho completo sin espacios laterales */
+        .seccion-portada,
+        .seccion-fotos,
+        .seccion-fecha,
+        .countdown-section,
+        .seccion-ubicaciones,
+        .seccion-vestimenta,
+        .seccion-confirmacion,
         .seccion-cierre {
             width: 100%;
             max-width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0 15px 40px 15px;
+            padding: 0;
+            margin: 0;
             background-color: #e6f0f7;
         }
 
-        .seccion-cierre .foto-invitacion {
-            margin-bottom: 0;
+        /* Excepción de padding interno solo para las fotos con fondo decorativo */
+        .seccion-fotos {
+            padding: 40px 0;
+            background-image: url('fondo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
-        /* Contenedor del formulario flotando exactamente sobre la imagen fondoconfirmacion.jpg */
-        .formulario-sobre-foto {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 85%;
-            max-width: 320px;
-            z-index: 5;
+        .seccion-fecha {
+            padding-bottom: 20px;
         }
 
-        /* Sección única para juntar Ceremonia, Recepción y Galería (carrusel) completamente pegadas */
-        .seccion-ubicaciones {
+        .countdown-section {
+            padding: 20px 0 40px 0;
+        }
+
+        .seccion-cierre {
+            padding-bottom: 40px;
+        }
+
+        /* Contenedor del formulario posicionado exactamente debajo de confirmacion.jpg */
+        .formulario-debajo-foto {
             width: 100%;
             max-width: 100%;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 15px 0 15px;
+            justify-content: center;
             background-color: #e6f0f7;
+            padding: 20px 0;
         }
 
         .ubicacion-item {
             position: relative;
             display: inline-block;
             width: 100%;
-            max-width: 500px;
+            max-width: 100%;
         }
 
-        /* Estilo base de las fotos estáticas */
+        /* Estilo base de las fotos estáticas a pantalla completa (100% de ancho) */
         .foto-invitacion {
             width: 100%;
-            max-width: 500px;
+            max-width: 100%;
             height: auto;     
-            object-fit: contain; 
+            object-fit: cover; 
             display: block;
             opacity: 0;
             transform: translateY(50px);
         }
 
-        /* Contenedor del Carrusel adaptado sin espacios ni fondos blancos (altura automática según la imagen) */
+        /* Contenedor del Carrusel adaptado a pantalla completa */
         .slider-wrapper {
             position: relative;
             width: 100%;
-            max-width: 500px;
+            max-width: 100%;
             display: block;
             opacity: 0;
             transform: translateY(50px);
@@ -218,12 +160,12 @@
             overflow: hidden;
         }
 
-        /* La primera imagen define el alto natural, las demás se apilan encima sin recortar ni dejar fondos */
         .slider-container img {
             width: 100%;
+            max-width: 100%;
             height: auto;
             display: block;
-            object-fit: contain;
+            object-fit: cover;
             opacity: 0;
             transition: opacity 1.2s ease-in-out;
         }
@@ -237,18 +179,12 @@
             opacity: 1;
         }
 
-        /* Margen de separación entre las fotos dentro de secciones con espacio */
+        /* Margen inferior solo para las fotos dentro de la sección de fondo personalizado */
         .seccion-fotos .foto-invitacion {
             margin-bottom: 25px;
-        }
-
-        .seccion-fecha .foto-invitacion {
-            margin-bottom: 0;
-        }
-
-        .seccion-ubicaciones .foto-invitacion,
-        .seccion-ubicaciones .slider-wrapper {
-            margin-bottom: 0;
+            width: 92%; /* Ligeramente más angosta para que luzca el marco de fondo.jpg */
+            max-width: 500px;
+            border-radius: 4px;
         }
 
         /* --- BOTÓN DE UBICACIÓN SUPERPUESTO ABAJO SOBRE LA FOTO --- */
@@ -279,17 +215,6 @@
         }
 
         /* --- ESTILOS DEL CONTADOR Y TEXTO SUPERIOR --- */
-        .countdown-section {
-            width: 100%;
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px 15px 40px 15px;
-            background-color: #e6f0f7;
-        }
-
         .countdown-title {
             font-family: 'SS Abigail', serif;
             font-size: 22px;
@@ -355,10 +280,12 @@
         }
 
         .form-container-custom {
-            width: 100%;
+            width: 90%;
             max-width: 340px;
             margin: auto;
             box-sizing: border-box;
+            background-color: #e6f0f7;
+            padding: 10px;
         }
 
         label.titulo-form {
@@ -492,10 +419,16 @@
 
         /* Animación en cascada al abrir */
         #portadaScreen.show .foto-invitacion,
-        #portadaScreen.show .slider-wrapper {
+        #portadaScreen.show .slider-wrapper,
+        #portadaScreen.show .formulario-debajo-foto {
             opacity: 1;
             transform: translateY(0);
             transition: opacity 2.5s cubic-bezier(0.16, 1, 0.3, 1), transform 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #portadaScreen .formulario-debajo-foto {
+            opacity: 0;
+            transform: translateY(50px);
         }
 
         /* Retrasos escalonados en orden exacto */
@@ -513,7 +446,7 @@
         #portadaScreen.show .img-vestimenta { transition-delay: 6.8s; }
         #portadaScreen.show .img-regalos { transition-delay: 7.4s; }
         #portadaScreen.show .img-confirmacion { transition-delay: 8.0s; }
-        #portadaScreen.show .img-fondoconfirmacion { transition-delay: 8.6s; }
+        #portadaScreen.show .formulario-debajo-foto { transition-delay: 8.6s; }
         #portadaScreen.show .img-final { transition-delay: 9.2s; }
         #portadaScreen.show .img-cierre { transition-delay: 9.8s; }
 
@@ -525,16 +458,14 @@
         .image-wrapper {
             position: relative;
             display: inline-block;
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
             height: 100%;
         }
 
         .image-wrapper img {
+            width: 100%;
             height: 100%;
-            width: auto;
-            max-width: 100%;
-            object-fit: contain;
+            object-fit: cover;
             display: block;
         }
 
@@ -543,7 +474,7 @@
             top: 48.5%; 
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 9%;   
+            width: 12%;   
             aspect-ratio: 1 / 1;
             cursor: pointer;
             border-radius: 50%;
@@ -570,7 +501,7 @@
             transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
         }
 
-        /* --- BOTÓN DE MÚSICA (FLOTANTE EN LA ESQUINA) --- */
+        /* --- BOTÓN DE MÚSICA (OCULTO EN LA PRIMERA FOTO, APARECE AL ABRIR) --- */
         #music-btn {
             position: fixed;
             top: 20px;
@@ -586,7 +517,14 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease, transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        #music-btn.show-music {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         #music-btn:hover {
@@ -628,7 +566,7 @@
         Tu navegador no soporta audio.
     </audio>
 
-    <!-- Botón flotante de música -->
+    <!-- Botón flotante de música (Oculto inicialmente) -->
     <button id="music-btn" onclick="toggleMusica()" title="Reproducir / Pausar música">
         <svg id="music-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
@@ -714,17 +652,16 @@
                 </div>
             </div>
 
-            <!-- Quinta sección: Vestimenta, Regalos y la foto de Confirmación totalmente pegadas -->
+            <!-- Quinta sección: Vestimenta y Regalos -->
             <div class="seccion-vestimenta">
                 <img src="vestimenta.jpg" alt="Código de Vestimenta" class="foto-invitacion img-vestimenta">
                 <img src="regalos.jpg" alt="Lluvia de Sobres / Regalos" class="foto-invitacion img-regalos">
-                <img src="confirmacion.jpg" alt="Confirmación" class="foto-invitacion img-confirmacion">
             </div>
 
-            <!-- Sexta sección: Fondo (fondoconfirmacion.jpg) con el formulario incrustado encima -->
+            <!-- Sexta sección: Confirmación y el formulario abajo -->
             <div class="seccion-confirmacion">
-                <img src="fondoconfirmacion.jpg" alt="Fondo de confirmación" class="foto-invitacion img-fondoconfirmacion">
-                <div class="formulario-sobre-foto">
+                <img src="confirmacion.jpg" alt="Confirmación" class="foto-invitacion img-confirmacion">
+                <div class="formulario-debajo-foto">
                     <div class="form-container-custom">
                         <div id="formContent">
                             <form id="rsvpForm">
@@ -781,6 +718,7 @@
             sobre.style.pointerEvents = 'none';
             
             portada.classList.add('show');
+            musicBtn.classList.add('show-music'); // Muestra la bocina al abrir
 
             audio.play().then(() => {
                 musicBtn.classList.add('playing');
