@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Invitación - Mis XV</title>
+
+    <link rel="preconnect" href="https://fonts.cdnfonts.com">
+    <link href="https://fonts.cdnfonts.com/css/ss-abigail" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #e6f0f7;
+            overflow-x: hidden;
+            font-family: sans-serif;
+        }
+
+        .invitation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.4s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Pantalla principal de la invitación */
+        #portadaScreen {
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow-y: auto; 
+            overflow-x: hidden;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: #e6f0f7;
+        }
+
+        #portadaScreen.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Sección superior (Portada y Frase pegadas con fondo azul cielo) */
+        .seccion-portada {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            background-color: #e6f0f7;
+        }
+
+        .seccion-portada .foto-invitacion {
+            margin-bottom: 0;
+        }
+
+        /* Sección del fondo personalizado (para padres, padrinos, chambelanes y damas) */
+        .seccion-fotos {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 15px;
+            background-image: url('fondo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Sección final para la fecha (con fondo azul cielo, sin espacio superior y con el contador integrado) */
+        .seccion-fecha {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 15px 20px 15px;
+            background-color: #e6f0f7;
+        }
+
+        /* Sección para la vestimenta, regalos, confirmacion y fondoconfirmacion completamente pegadas juntas y al carrusel */
+        .seccion-vestimenta {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 15px 0 15px;
+            background-color: #e6f0f7;
+        }
+
+        .seccion-vestimenta .foto-invitacion {
+            margin-bottom: 0;
+        }
+
+        /* Sección para la foto fondoconfirmacion.jpg con el formulario incrustado encima (sin espacio superior) */
+        .seccion-confirmacion {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 15px 0 15px;
+            background-color: #e6f0f7;
+        }
+
+        .seccion-confirmacion .foto-invitacion {
+            margin-bottom: 0;
+        }
+
+        /* Nueva sección para foto final.jpg y cierre.jpg completamente pegadas al final */
+        .seccion-cierre {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 15px 40px 15px;
+            background-color: #e6f0f7;
+        }
+
+        .seccion-cierre .foto-invitacion {
+            margin-bottom: 0;
+        }
+
+        /* Contenedor del formulario flotando exactamente sobre la imagen fondoconfirmacion.jpg */
+        .formulario-sobre-foto {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 320px;
+            z-index: 5;
+        }
+
+        /* Sección única para juntar Ceremonia, Recepción y Galería (carrusel) completamente pegadas */
+        .seccion-ubicaciones {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 15px 0 15px;
+            background-color: #e6f0f7;
+        }
+
+        .ubicacion-item {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Estilo base de las fotos estáticas */
+        .foto-invitacion {
+            width: 100%;
+            max-width: 500px;
+            height: auto;     
+            object-fit: contain; 
+            display: block;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        /* Contenedor del Carrusel adaptado sin espacios ni fondos blancos (altura automática según la imagen) */
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            display: block;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+
+        /* La primera imagen define el alto natural, las demás se apilan encima sin recortar ni dejar fondos */
+        .slider-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+
+        .slider-container img:not(:first-child) {
+            position: absolute;
+            inset: 0;
+        }
+
+        .slider-container img.active {
+            opacity: 1;
+        }
+
+        /* Margen de separación entre las fotos dentro de secciones con espacio */
+        .seccion-fotos .foto-invitacion {
+            margin-bottom: 25px;
+        }
+
+        .seccion-fecha .foto-invitacion {
+            margin-bottom: 0;
+        }
+
+        .seccion-ubicaciones .foto-invitacion,
+        .seccion-ubicaciones .slider-wrapper {
+            margin-bottom: 0;
+        }
+
+        /* --- BOTÓN DE UBICACIÓN SUPERPUESTO ABAJO SOBRE LA FOTO --- */
+        .ubicacion-btn {
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #A2CDE1;
+            color: #ffffff;
+            font-family: 'SS Abigail', serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 10px 28px;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            letter-spacing: 1px;
+            text-align: center;
+            z-index: 5;
+            white-space: nowrap;
+        }
+
+        .ubicacion-btn:hover {
+            transform: translateX(-50%) scale(1.05);
+            background-color: #8ec2d8;
+        }
+
+        /* --- ESTILOS DEL CONTADOR Y TEXTO SUPERIOR --- */
+        .countdown-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 15px 40px 15px;
+            background-color: #e6f0f7;
+        }
+
+        .countdown-title {
+            font-family: 'SS Abigail', serif;
+            font-size: 22px;
+            color: #000000;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 700;
+            opacity: 0.95;
+            -webkit-text-stroke: 0.2px rgba(0,0,0,0.2);
+        }
+
+        .countdown {
+            display: flex;
+            gap: 38px;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .block {
+            text-align: center;
+            position: relative;
+        }
+
+        .number {
+            font-size: 58px;
+            color: #000000;
+            line-height: 1;
+            letter-spacing: 2px;
+            font-family: 'SS Abigail', serif;
+            font-weight: 700;
+            -webkit-text-stroke: 0.4px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .block::after {
+            content: "";
+            display: block;
+            width: 36px;
+            height: 1px;
+            background: rgba(0,0,0,0.5);
+            margin: 8px auto 6px;
+        }
+
+        .label {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: #000000;
+            font-family: 'SS Abigail', serif;
+            font-weight: 700;
+            opacity: 0.95;
+            -webkit-text-stroke: 0.2px rgba(0,0,0,0.2);
+        }
+
+        /* --- ESTILOS DEL FORMULARIO INTEGRADO --- */
+        :root {
+            --color-principal: #A2CDE1;
+            --color-oscuro: #7FB9D6;
+            --color-dorado-texto: #000000;
+            --color-texto-suave: #5F5F5F;
+            --color-borde: #C9DFEA;
+            --color-fondo-input: #F7FBFD;
+        }
+
+        .form-container-custom {
+            width: 100%;
+            max-width: 340px;
+            margin: auto;
+            box-sizing: border-box;
+        }
+
+        label.titulo-form {
+            display: block;
+            margin-top: 15px;
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 11px;
+            margin-bottom: 6px;
+            color: var(--color-dorado-texto);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .form-container-custom input[type="text"],
+        .form-container-custom select,
+        .form-container-custom textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--color-borde);
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            font-size: 11px;
+            background-color: var(--color-fondo-input);
+            color: var(--color-texto-suave);
+            margin-bottom: 4px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-container-custom input[type="text"]::placeholder,
+        .form-container-custom textarea::placeholder {
+            color: #A0A0A0;
+        }
+
+        .form-container-custom input[type="text"]:focus,
+        .form-container-custom select:focus,
+        .form-container-custom textarea:focus {
+            border-color: var(--color-principal);
+            box-shadow: 0 0 8px rgba(162,205,225,.35);
+        }
+
+        .opciones-asistencia {
+            display: flex;
+            border: 1px solid var(--color-borde);
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: var(--color-fondo-input);
+            gap: 1px;
+        }
+
+        .opcion-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 3px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: var(--color-texto-suave);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .opcion-item input {
+            display: none;
+        }
+
+        .opcion-item:has(input:checked) {
+            background-color: var(--color-principal);
+            color: #FFFFFF;
+        }
+
+        .form-container-custom button {
+            background: linear-gradient(
+                180deg,
+                var(--color-principal) 0%,
+                var(--color-oscuro) 100%
+            );
+            color: #FFFFFF;
+            padding: 12px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 11px;
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 10px rgba(162,205,225,.25);
+            transition: all 0.3s ease;
+        }
+
+        .form-container-custom button:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(162,205,225,.35);
+        }
+
+        .form-container-custom button:active {
+            transform: translateY(1px);
+        }
+
+        .form-container-custom button.cargando {
+            background: var(--color-borde) !important;
+            color: var(--color-texto-suave) !important;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #exito {
+            display: none;
+            text-align: center;
+            padding: 20px 5px;
+            font-family: 'Cinzel', serif;
+        }
+
+        #exito h3 {
+            color: #000000;
+            font-size: 13px;
+            letter-spacing: 1px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* Animación en cascada al abrir */
+        #portadaScreen.show .foto-invitacion,
+        #portadaScreen.show .slider-wrapper {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 2.5s cubic-bezier(0.16, 1, 0.3, 1), transform 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Retrasos escalonados en orden exacto */
+        #portadaScreen.show .img-1 { transition-delay: 0.2s; }
+        #portadaScreen.show .img-2 { transition-delay: 0.8s; }
+        #portadaScreen.show .img-3 { transition-delay: 1.4s; }
+        #portadaScreen.show .img-4 { transition-delay: 2.0s; }
+        #portadaScreen.show .img-5 { transition-delay: 2.6s; }
+        #portadaScreen.show .img-6 { transition-delay: 3.2s; }
+        #portadaScreen.show .img-7 { transition-delay: 3.8s; }
+        #portadaScreen.show .img-8 { transition-delay: 4.4s; }
+        #portadaScreen.show .img-9 { transition-delay: 5.0s; }
+        #portadaScreen.show .img-10 { transition-delay: 5.6s; }
+        #portadaScreen.show .slider-wrapper { transition-delay: 6.2s; }
+        #portadaScreen.show .img-vestimenta { transition-delay: 6.8s; }
+        #portadaScreen.show .img-regalos { transition-delay: 7.4s; }
+        #portadaScreen.show .img-confirmacion { transition-delay: 8.0s; }
+        #portadaScreen.show .img-fondoconfirmacion { transition-delay: 8.6s; }
+        #portadaScreen.show .img-final { transition-delay: 9.2s; }
+        #portadaScreen.show .img-cierre { transition-delay: 9.8s; }
+
+        #sobreScreen {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .image-wrapper {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            max-height: 100%;
+            height: 100%;
+        }
+
+        .image-wrapper img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .seal-btn {
+            position: absolute;
+            top: 48.5%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 9%;   
+            aspect-ratio: 1 / 1;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 10;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 0 0px rgba(200, 230, 255, 0);
+            animation: micro-pulse 3s infinite;
+        }
+
+        .seal-btn:hover {
+            box-shadow: 0 0 5px 3px rgba(200, 230, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes micro-pulse {
+            0% { box-shadow: 0 0 0 0px rgba(200, 230, 255, 0); }
+            50% { box-shadow: 0 0 4px 3px rgba(200, 230, 255, 0.6); }
+            100% { box-shadow: 0 0 0 0px rgba(200, 230, 255, 0); }
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+            transform: scale(1.05);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+
+        /* --- BOTÓN DE MÚSICA (FLOTANTE EN LA ESQUINA) --- */
+        #music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background-color: #87CEEB;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        #music-btn:hover {
+            transform: scale(1.08);
+            background-color: #70bce0;
+        }
+
+        #music-btn.playing {
+            animation: music-pulse 2s infinite;
+        }
+
+        @keyframes music-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(135, 206, 235, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(135, 206, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(135, 206, 235, 0); }
+        }
+
+        #music-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        @media(max-width:600px){
+            .countdown { gap: 20px; }
+            .number { font-size: 40px; }
+            .label { font-size: 10px; }
+            .countdown-title { font-size: 18px; }
+            .ubicacion-btn { font-size: 13px; padding: 8px 22px; bottom: 15px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Elemento de audio con la canción -->
+    <audio id="background-music" loop>
+        <source src="cancion.mp3" type="audio/mpeg">
+        Tu navegador no soporta audio.
+    </audio>
+
+    <!-- Botón flotante de música -->
+    <button id="music-btn" onclick="toggleMusica()" title="Reproducir / Pausar música">
+        <svg id="music-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+        </svg>
+    </button>
+
+    <div class="invitation-container">
+        <!-- Pantalla 1: Foto (Sobre) -->
+        <div id="sobreScreen" class="screen">
+            <div class="image-wrapper">
+                <img src="foto.jpg" alt="Sobre de invitación">
+                <div class="seal-btn" onclick="abrirInvitacion()" title="Tocar para abrir"></div>
+            </div>
+        </div>
+
+        <!-- Pantalla 2: Contenido de la invitación -->
+        <div id="portadaScreen" class="screen">
+            <!-- Primera sección (Portada y Frase con fondo azul cielo) -->
+            <div class="seccion-portada">
+                <img src="portada.jpg" alt="Portada" class="foto-invitacion img-1">
+                <img src="frase.jpg" alt="Frase" class="foto-invitacion img-2">
+            </div>
+            <!-- Segunda sección (Con fondo.jpg para padres, padrinos, chambelanes y damas) -->
+            <div class="seccion-fotos">
+                <img src="padres.jpg" alt="Padres" class="foto-invitacion img-3">
+                <img src="padrinos.jpg" alt="Padrinos" class="foto-invitacion img-4">
+                <img src="chambelanes.jpg" alt="Chambelanes" class="foto-invitacion img-5">
+                <img src="damas.jpg" alt="Damas" class="foto-invitacion img-6">
+            </div>
+            <!-- Tercera sección (Fecha con fondo azul cielo) -->
+            <div class="seccion-fecha">
+                <img src="fecha.jpg" alt="Fecha" class="foto-invitacion img-7">
+            </div>
+
+            <!-- Sección de Cuenta Regresiva -->
+            <div class="countdown-section">
+                <div class="countdown-title">Falta para el gran día</div>
+                <div class="countdown">
+                    <div class="block">
+                        <div id="days" class="number"></div>
+                        <div class="label">DÍAS</div>
+                    </div>
+                    <div class="block">
+                        <div id="hours" class="number"></div>
+                        <div class="label">HORAS</div>
+                    </div>
+                    <div class="block">
+                        <div id="minutes" class="number"></div>
+                        <div class="label">MINUTOS</div>
+                    </div>
+                    <div class="block">
+                        <div id="seconds" class="number"></div>
+                        <div class="label">SEGUNDOS</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cuarta sección (Ceremonia, Recepción, Foto de Galería y Carrusel integrados y pegados) -->
+            <div class="seccion-ubicaciones">
+                <div class="ubicacion-item">
+                    <img src="ceremonia.jpg" alt="Ceremonia" class="foto-invitacion img-8">
+                    <a href="https://www.google.com/maps/place/Parroquia+San+Francisco+Javier/@32.5121954,-117.0353032,825m/data=!3m2!1e3!4b1!4m6!3m5!1s0x80d949caf5474ae3:0x2a7ed0013482a447!8m2!3d32.5121954!4d-117.0353032!16s%2Fg%2F1wl4qx24?entry=ttu&g_ep=EgoyMDI2MDcyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="ubicacion-btn">Ver ubicación</a>
+                </div>
+                <div class="ubicacion-item">
+                    <img src="recepcion.jpg" alt="Recepción" class="foto-invitacion img-9">
+                    <a href="https://www.google.com/maps/place/32%C2%B031'39.4%22N+116%C2%B041'45.7%22W/@32.5275993,-116.6986122,825m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d32.5275993!4d-116.6960373?hl=es&entry=ttu&g_ep=EgoyMDI2MDcyOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="ubicacion-btn">Ver ubicación</a>
+                </div>
+                
+                <!-- Foto estática de Galería añadida antes del carrusel -->
+                <div class="ubicacion-item">
+                    <img src="galeria.jpg" alt="Galería" class="foto-invitacion img-10">
+                </div>
+
+                <!-- Carrusel de Galería integrado, completo y sin bordes blancos -->
+                <div class="ubicacion-item slider-wrapper">
+                    <div class="slider-container">
+                        <img src="https://i.imgur.com/89jlSf4.jpeg" class="active" alt="Galería 1">
+                        <img src="https://i.imgur.com/2Ithbbh.jpeg" alt="Galería 2">
+                        <img src="https://i.imgur.com/qKiIAMF.jpeg" alt="Galería 3">
+                        <img src="https://i.imgur.com/F7j5n5c.jpeg" alt="Galería 4">
+                        <img src="https://i.imgur.com/Q1pJ65N.jpeg" alt="Galería 5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quinta sección: Vestimenta, Regalos y la foto de Confirmación totalmente pegadas -->
+            <div class="seccion-vestimenta">
+                <img src="vestimenta.jpg" alt="Código de Vestimenta" class="foto-invitacion img-vestimenta">
+                <img src="regalos.jpg" alt="Lluvia de Sobres / Regalos" class="foto-invitacion img-regalos">
+                <img src="confirmacion.jpg" alt="Confirmación" class="foto-invitacion img-confirmacion">
+            </div>
+
+            <!-- Sexta sección: Fondo (fondoconfirmacion.jpg) con el formulario incrustado encima -->
+            <div class="seccion-confirmacion">
+                <img src="fondoconfirmacion.jpg" alt="Fondo de confirmación" class="foto-invitacion img-fondoconfirmacion">
+                <div class="formulario-sobre-foto">
+                    <div class="form-container-custom">
+                        <div id="formContent">
+                            <form id="rsvpForm">
+                                <label class="titulo-form">Nombre Completo</label>
+                                <input type="text" name="nombre" placeholder="Escribe tu nombre" required>
+
+                                <label class="titulo-form">¿Asistirás?</label>
+                                <div class="opciones-asistencia">
+                                    <label class="opcion-item">
+                                        <input type="radio" name="asistencia" value="1" checked>
+                                        SÍ, ASISTIRÉ
+                                    </label>
+                                    <label class="opcion-item">
+                                        <input type="radio" name="asistencia" value="0">
+                                        NO PODRÉ ASISTIR
+                                    </label>
+                                </div>
+
+                                <label class="titulo-form">Mensaje o felicitación</label>
+                                <textarea name="mensaje" rows="2" placeholder="Escribe tu mensaje (opcional)"></textarea>
+
+                                <button type="submit" id="btn">Enviar Respuesta</button>
+                            </form>
+                        </div>
+
+                        <div id="exito">
+                            <h3>
+                                ¡Muchas gracias!<br>
+                                Tu respuesta ha sido enviada.
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Séptima sección: final.jpg y cierre.jpg completamente pegadas al final -->
+            <div class="seccion-cierre">
+                <img src="final.jpg" alt="Foto final" class="foto-invitacion img-final">
+                <img src="cierre.jpg" alt="Cierre" class="foto-invitacion img-cierre">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('background-music');
+        const musicBtn = document.getElementById('music-btn');
+        const musicIcon = document.getElementById('music-icon');
+
+        function abrirInvitacion() {
+            const sobre = document.getElementById('sobreScreen');
+            const portada = document.getElementById('portadaScreen');
+            
+            sobre.classList.add('fade-out');
+            sobre.style.pointerEvents = 'none';
+            
+            portada.classList.add('show');
+
+            audio.play().then(() => {
+                musicBtn.classList.add('playing');
+                actualizarIcono(true);
+            }).catch(error => {
+                console.log("Reproducción automática bloqueada por el navegador.");
+            });
+        }
+
+        function toggleMusica() {
+            if (audio.paused) {
+                audio.play();
+                musicBtn.classList.add('playing');
+                actualizarIcono(true);
+            } else {
+                audio.pause();
+                musicBtn.classList.remove('playing');
+                actualizarIcono(false);
+            }
+        }
+
+        function actualizarIcono(estaReproduciendo) {
+            if (estaReproduciendo) {
+                musicIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+            } else {
+                musicIcon.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+            }
+        }
+
+        // --- SCRIPT DEL CARRUSEL DE IMÁGENES ---
+        const sliderImages = document.querySelectorAll('.slider-container img');
+        let currentImage = 0;
+
+        setInterval(() => {
+            sliderImages[currentImage].classList.remove('active');
+            currentImage = (currentImage + 1) % sliderImages.length;
+            sliderImages[currentImage].classList.add('active');
+        }, 3000);
+
+        // --- SCRIPT DE LA CUENTA REGRESIVA (5 de septiembre de 2026 a las 3:00 PM) ---
+        document.addEventListener('DOMContentLoaded',()=>{
+            const DATE_TARGET = new Date(2026, 8, 5, 15, 0, 0); // Mes 8 = Septiembre (enero es 0)
+
+            const days = document.getElementById('days');
+            const hours = document.getElementById('hours');
+            const minutes = document.getElementById('minutes');
+            const seconds = document.getElementById('seconds');
+
+            const MS = 1000;
+            const MIN = MS * 60;
+            const H = MIN * 60;
+            const D = H * 24;
+
+            function format(n){
+                return n < 10 ? '0' + n : n;
+            }
+
+            function updateCountdown(){
+                const now = new Date();
+                let dur = DATE_TARGET - now;
+
+                if(dur < 0) dur = 0;
+
+                days.textContent = Math.floor(dur / D);
+                hours.textContent = format(Math.floor((dur % D) / H));
+                minutes.textContent = format(Math.floor((dur % H) / MIN));
+                seconds.textContent = format(Math.floor((dur % MIN) / MS));
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        });
+
+        // --- SCRIPT DEL FORMULARIO RSVP ---
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzyfGlcapWrjsB0jMggWwuiFvpbCDFCCy38bT0uJqxm-h2tQ6EJg0Kdx2j8uuChLqdx/exec';
+        const form = document.getElementById('rsvpForm');
+        const btn = document.getElementById('btn');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            btn.disabled = true;
+            btn.innerText = 'Enviando...';
+            btn.classList.add('cargando');
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: new FormData(form),
+                mode: 'no-cors'
+            })
+            .then(() => {
+                document.getElementById('formContent').style.display = 'none';
+                document.getElementById('exito').style.display = 'block';
+            })
+            .catch(() => {
+                alert('Hubo un error al enviar.');
+                btn.disabled = false;
+                btn.innerText = 'Enviar Respuesta';
+                btn.classList.remove('cargando');
+            });
+        });
+    </script>
+
+</body>
+</html>
